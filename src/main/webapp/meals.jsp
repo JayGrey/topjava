@@ -1,4 +1,5 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="/WEB-INF/utils.tld" prefix="util" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -39,15 +40,12 @@
                 <tr class="normal">
             </c:otherwise>
         </c:choose>
-            <td>${meal.description}</td>
-            <td>${meal.calories}</td>
-            <%--<td>${meal.dateTime.format(${formatter})}</td>--%>
-        <td>
-        ${meal.dateTime.format(<%%>)}
-        </td>
+        <td>${meal.description}</td>
+        <td>${meal.calories}</td>
+        <td><util:date_format date="${meal.dateTime}" format="dd.MM.yyyy HH:mm"/></td>
         </tr>
     </c:forEach>
-    
+
 </table>
 </body>
 </html>
