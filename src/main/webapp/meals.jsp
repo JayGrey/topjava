@@ -30,7 +30,6 @@
     </tr>
     </thead>
     <%--@elvariable id="mealList" type="java.util.List<ru.javawebinar.topjava.model.MealWithExceed>"--%>
-    <%--<jsp:useBean id="formatter" class="java.time.format.DateTimeFormatter" />--%>
     <c:forEach var="meal" items="${mealList}">
         <c:choose>
             <c:when test="${meal.exceed}">
@@ -42,7 +41,7 @@
         </c:choose>
         <td>${meal.description}</td>
         <td>${meal.calories}</td>
-        <td><util:date_format date="${meal.dateTime}" format="dd.MM.yyyy HH:mm"/></td>
+        <td><util:date_format format="dd.MM.yyyy HH:mm">${meal.dateTime}</util:date_format></td>
         </tr>
     </c:forEach>
 

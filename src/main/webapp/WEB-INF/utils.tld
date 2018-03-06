@@ -13,12 +13,8 @@
     <tag>
         <name>date_format</name>
         <tag-class>ru.javawebinar.topjava.util.tags.DateFormatterTag</tag-class>
-        <body-content>empty</body-content>
+        <body-content>scriptless</body-content>
 
-        <attribute>
-            <name>date</name>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
         <attribute>
             <name>format</name>
         </attribute>

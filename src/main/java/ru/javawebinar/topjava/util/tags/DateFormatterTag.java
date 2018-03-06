@@ -10,28 +10,25 @@ import java.time.format.DateTimeFormatter;
 
 public class DateFormatterTag extends SimpleTagSupport {
     private String format;
-    private String date;
 
     public void setFormat(String format) {
         this.format = format;
     }
 
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    StringWriter sw = new StringWriter();
+    private StringWriter writer = new StringWriter();
 
     @Override
     public void doTag() throws JspException, IOException {
         JspWriter out = getJspContext().getOut();
-        String result = "";
+        getJspBody().invoke(writer);
 
-        if (date != null && format != null) {
-            LocalDateTime localDate = LocalDateTime.parse(date);
-            result = localDate.format(DateTimeFormatter.ofPattern(format));
+
+        if (format == null) {
+            format = "dd.MM.yyyy";
         }
 
-        out.print(result);
+        LocalDateTime localDate = LocalDateTime.parse(writer.toString());
+
+        out.print(localDate.format(DateTimeFormatter.ofPattern(format)));
     }
 }
