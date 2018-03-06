@@ -31,17 +31,10 @@
     </thead>
     <%--@elvariable id="mealList" type="java.util.List<ru.javawebinar.topjava.model.MealWithExceed>"--%>
     <c:forEach var="meal" items="${mealList}">
-        <c:choose>
-            <c:when test="${meal.exceed}">
-                <tr class="exceed">
-            </c:when>
-            <c:otherwise>
-                <tr class="normal">
-            </c:otherwise>
-        </c:choose>
-        <td>${meal.description}</td>
-        <td>${meal.calories}</td>
-        <td><util:date_format format="dd.MM.yyyy HH:mm">${meal.dateTime}</util:date_format></td>
+        <tr class="${meal.exceed ? 'exceed' : 'normal'}">
+            <td>${meal.description}</td>
+            <td>${meal.calories}</td>
+            <td><util:date_format format="dd.MM.yyyy HH:mm">${meal.dateTime}</util:date_format></td>
         </tr>
     </c:forEach>
 
