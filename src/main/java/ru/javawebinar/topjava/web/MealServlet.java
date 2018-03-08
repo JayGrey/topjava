@@ -50,6 +50,8 @@ public class MealServlet extends HttpServlet {
         if (action != null && action.equalsIgnoreCase("delete")) {
             int id = Integer.valueOf(request.getParameter("id"));
             mealDao.deleteMeal(id);
+            response.sendRedirect("meals");
+            return;
         }
 
         if (action != null && action.equalsIgnoreCase("update")) {
