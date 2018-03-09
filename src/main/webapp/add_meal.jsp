@@ -12,14 +12,32 @@
 </head>
 <body>
 <p>
-    <a href="<c:url value="/"/>">Home</a>
+    <a href="<c:url value="/"/>">return to home</a>
+</p>
+
+<p>
+<h2>Add new meal</h2>
 </p>
 
 <form action="<c:url value="/meals"/>" method="post">
-    <input type="text" name="name" />
-    <input type="number" name="calories" />
-    <input type="date" name="date"/>
-    <input type="time" name="time"/>
+    <table>
+        <tr>
+            <td><label for="name">Description: </label></td>
+            <td><input type="text" id="name" name="name" required/></td>
+        </tr>
+        <tr>
+            <td><label for="calories">Calories:</label></td>
+            <td><input type="number" id="calories" name="calories" placeholder="number of calories" min="0" required/></td>
+        </tr>
+        <tr>
+            <td><label for="date">Date</label></td>
+            <td><input type="date" id="date" name="date" required/></td>
+        </tr>
+        <tr>
+            <td><label for="time">Time</label></td>
+            <td><input type="time" id="time" name="time" required/></td>
+        </tr>
+    </table>
     <button type="submit">Submit</button>
 </form>
 </body>
