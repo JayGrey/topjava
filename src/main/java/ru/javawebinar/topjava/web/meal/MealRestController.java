@@ -7,6 +7,7 @@ import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.to.MealWithExceed;
 import ru.javawebinar.topjava.util.MealsUtil;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -41,10 +42,14 @@ public class MealRestController {
         return MealsUtil.getWithExceeded(meals, caloriesPerDay);
     }
 
-    public List<MealWithExceed> getFilteredWithExceed(int caloriesPerDay, LocalTime startTime, LocalTime endTime,
-                                                      int userId) {
+    public List<MealWithExceed> getFilteredWithExceed(int caloriesPerDay, LocalDate from, LocalDate to, int userId) {
         List<Meal> meals = service.getAll(userId);
-        return MealsUtil.getFilteredWithExceeded(meals, caloriesPerDay, startTime, endTime);
+        return MealsUtil.getFilteredWithExceeded(meals, caloriesPerDay, from, to);
+    }
+
+    public List<MealWithExceed> getFilteredWithExceed(int caloriesPerDay, LocalTime from, LocalTime to, int userId) {
+        List<Meal> meals = service.getAll(userId);
+        return MealsUtil.getFilteredWithExceeded(meals, caloriesPerDay, from, to);
     }
 
 }

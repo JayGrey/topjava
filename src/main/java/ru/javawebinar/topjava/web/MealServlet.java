@@ -6,6 +6,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.javawebinar.topjava.AuthorizedUser;
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.util.CollectionUtil;
 import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.web.meal.MealRestController;
 
@@ -15,7 +16,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
@@ -38,7 +42,7 @@ public class MealServlet extends HttpServlet {
         String id = request.getParameter("id");
         int userId = AuthorizedUser.id();
 
-        Meal meal = new Meal(id.isEmpty() ? null : Integer.valueOf(id),LocalDateTime.parse(request.getParameter("dateTime")),
+        Meal meal = new Meal(id.isEmpty() ? null : Integer.valueOf(id), LocalDateTime.parse(request.getParameter("dateTime")),
                 request.getParameter("description"), Integer.parseInt(request.getParameter("calories")), userId);
 
         if (id.isEmpty()) {
@@ -74,8 +78,31 @@ public class MealServlet extends HttpServlet {
                 break;
             case "all":
             default:
-                log.info("getAll");
-                request.setAttribute("meals", controller.getAllWithExceed(MealsUtil.DEFAULT_CALORIES_PER_DAY, userId));
+                log.info("getAll, params: {}", CollectionUtil.mapToString(request.getParameterMap()));
+
+                if (request.getParameterMap().containsKey("filter")) {
+                    String filterType = request.getParameter("filter");
+                    switch (filterType.toLowerCase()) {
+                        case "date": {
+                            LocalDate dateFrom = getDateFromRequest(request, "date_from", LocalDate.MIN);
+                            LocalDate dateTo = getDateFromRequest(request, "date_to", LocalDate.MAX);
+                            request.setAttribute("meals", controller.getFilteredWithExceed(
+                                    MealsUtil.DEFAULT_CALORIES_PER_DAY, dateFrom, dateTo, userId));
+                            break;
+                        }
+                        case "time": {
+                            LocalTime timeFrom = getTimeFromRequest(request, "time_from", LocalTime.MIN);
+                            LocalTime timeTo = getTimeFromRequest(request, "time_to", LocalTime.MAX);
+                            request.setAttribute("meals", controller.getFilteredWithExceed(
+                                    MealsUtil.DEFAULT_CALORIES_PER_DAY, timeFrom, timeTo, userId));
+                            break;
+                        }
+                    }
+                } else {
+                    request.setAttribute("meals", controller.getAllWithExceed(MealsUtil.DEFAULT_CALORIES_PER_DAY,
+                            userId));
+                }
+
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
         }
@@ -84,5 +111,21 @@ public class MealServlet extends HttpServlet {
     private int getId(HttpServletRequest request) {
         String paramId = Objects.requireNonNull(request.getParameter("id"));
         return Integer.parseInt(paramId);
+    }
+
+    private LocalDate getDateFromRequest(HttpServletRequest request, String paramName, LocalDate defaultValue) {
+        try {
+            return LocalDate.parse(request.getParameter(paramName));
+        } catch (DateTimeParseException | NullPointerException e) {
+            return defaultValue;
+        }
+    }
+
+    private LocalTime getTimeFromRequest(HttpServletRequest request, String paramName, LocalTime defaultValue) {
+        try {
+            return LocalTime.parse(request.getParameter(paramName));
+        } catch (DateTimeParseException | NullPointerException e) {
+            return defaultValue;
+        }
     }
 }
